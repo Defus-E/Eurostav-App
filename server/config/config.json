@@ -1,0 +1,20 @@
+{
+	"mongoose": {
+		"uri": "mongodb://localhost/eurostav",
+		"options": {
+			"useNewUrlParser": true,
+			"useFindAndModify": false,
+			"useCreateIndex": true,
+			"keepAlive": 1
+		}
+	},
+	"session": {
+		"secret": "^#$5sX(Hf6KUo!#65^",
+		"name": "sid",
+		"cookie": {
+			"path": "/",
+			"httpOnly": true,
+			"maxAge": 86400000
+		}
+	}
+}

@@ -1,0 +1,14 @@
+<% layout('./layout/index') -%>
+<% block('title', "Карта") -%>
+<% block('url', "/map") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Карта</h1>
+  </div>
+  <div class="content">
+    <div id="map" data-place="<%= place %>"></div>
+  </div>
+</div>
+
+<script src="/js/load-map.js" defer></script>

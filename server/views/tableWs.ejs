@@ -1,0 +1,24 @@
+<% layout('./layout/index') -%>
+<% block('title', "Изменить шихтовки") -%>
+<% block('url', "/tables") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1> Архив </h1>
+  </div>
+  <div class="content">
+    <ul class="table-list">
+    <% if (workers.length < 1) { %> Информация отсутствует <% }; %>
+    <% workers.forEach(worker => { %>
+      <li>
+        <div class="date"><%=worker.username%></div>
+        <ul class="contol mla">
+          <li class="change-worker-table mla">
+            <a href="/tables?date=<%= date%>&worker=<%= worker.login%>">Изменить</a>
+          </li>
+        </ul>
+      </li>
+    <% }); %>
+    </ul>
+  </div>
+</div>

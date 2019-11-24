@@ -1,0 +1,32 @@
+<ion-view title="Login" ng-controller="HomeController as hc">
+    <div id="app">
+      <main class="screen_auth">
+        <form ng-submit="login(hc.login, hc.password)">
+          <div class="logo">
+            Euro<span>stav</span></div>
+          <div class="uk-margin">
+            <div class="uk-inline"><span class="uk-form-icon" uk-icon="icon: user; ratio:.9"></span>
+              <input class="uk-input" ng-model="hc.login" placeholder="Логин" type="text" autocomplete="off" required/>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <div class="uk-inline"><span class="uk-form-icon" uk-icon="icon: lock; ratio:.9"></span>
+              <input class="uk-input" ng-model="hc.password" placeholder="Пароль" type="password" autocomplete="off" required/>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <div class="uk-form-controls">
+              <select id="place" class="uk-select" required>
+                <option value="Чехия">Чехия</option>
+                <option value="Словакия">Словакия</option>
+              </select>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <button class="uk-button uk-button-default">Авторизация</button>
+          </div>
+          <div class="error"></div>
+        </form>
+      </main>
+	</div>
+</ion-view>

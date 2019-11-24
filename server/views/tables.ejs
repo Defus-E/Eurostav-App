@@ -1,0 +1,44 @@
+<% layout('./layout/index') -%>
+<% block('title', "Шихтовки") -%>
+<% block('url', "/tables") -%>
+
+<%
+function formatDate(date) {
+  let monthNames = [
+    "Январь", "Февраль", "Март",
+    "Апрель", "Май", "Июнь", "Июль",
+    "Август", "Сентябрь", "Октябрь",
+    "Ноябрь", "Декабрь"
+  ];
+      
+  return `<div class="number">${date.year}</div><div class="month">${monthNames[date.month-1]}</div>`;
+}
+%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Шихтовки</h1>
+  </div>
+  <div class="content">
+    <ul class="tables-list ul-documents tables">
+      <% for (let i = 0; i < tables.length; i++) {
+        var date = tables[i]._id; %>
+      <li>
+        <div class="date-nums">
+          <%- formatDate(tables[i]._id) %>
+        </div>
+        <div class="clean"></div>
+        <div class="status"> </div>
+        <ul class="contol">
+          <li class="change-table"><a href="/tables?date=<%= date.year + '-' + (date.month < 10 ? '0' + date.month : date.month)%>" data-title="Изменить шихтовки">Изменить</a></li>
+          <li class="2archive"><a href="#" data-date="<%= date.year + '-' + (date.month < 10 ? '0' + date.month : date.month)%>">В архив</a></li>
+        </ul>
+      </li>
+      <% }; %>
+    </ul>
+  </div>
+  <% if (!total_elements) { %> <button class="uk-button uk-button-primary upload-documents" data-url='/upload-tables'>Предыдущий месяц...</button> <% }; %>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/upload-documents.js" defer></script>

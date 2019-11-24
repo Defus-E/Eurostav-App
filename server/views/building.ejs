@@ -1,0 +1,46 @@
+<% layout('./layout/index') -%>
+<% block('title', "Стройки") -%>
+<% block('url', "/building") -%>
+
+<div class="d_content">
+<%
+  function num2str(n, text_forms) {  
+    n = Math.abs(n) % 100; var n1 = n % 10;
+
+    if (n > 10 && n < 20) return text_forms[2];
+    if (n1 > 1 && n1 < 5) return text_forms[1];
+    if (n1 == 1) return text_forms[0];
+
+    return text_forms[2];
+  }
+%>
+  <div class="top-bar">
+    <h1>Стройки</h1>
+    <form class="search" style="display: flex; width:76%" action="/building/search" method="POST">
+      <input style="display: none" name="place" value="<%= place%>" />
+      <input class="uk-textarea" style="height:45px;padding-left:20px;" name="searchString" id="searchString" type="uk-textarea" maxlength="160" autocomplete="off" placeholder="Введите назване стройки" />
+      <button class="uk-button" style="margin: 0 15px;">Поиск</button>
+    </form>
+    <button class="uk-button uk-button-primary" uk-toggle="target: #add-loc">Добавить стройку</button>
+  </div>
+  <div class="content">
+    <ul class="loc-list ul-documents building">
+      <% for (let i = 0; i < addresses.length; i++) { %>
+        <li data-id="<%= addresses[i]._id%>" data-url="/building/edit" data-url-delete="/building/delete" data-place="<%= addresses[i].place%>" data-x="<%= addresses[i].cords[0]%>" data-y="<%= addresses[i].cords[1]%>">
+          <div class="title"><%= addresses[i].title %></div>
+          <div class="cranes" data-marks="<%= addresses[i].cranes.marks.join(', ')%>" data-series="<%= addresses[i].cranes.series.join(', ')%>"><%= addresses[i].cranes.marks.length + ' ' + num2str(addresses[i].cranes.marks.length, ['кран', 'крана', 'кранов']) %></div>
+          <ul class="contol">
+            <li class="edit_document"><a href="#" uk-toggle="target: #edit-loc">Изменить</a></li>
+            <li class="delete_document"><a href="">Удалить</a></li>
+          </ul>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+
+  <% if (total > 10) { %> <button class="uk-button uk-button-primary upload-documents" data-url='/building/upload'>Загрузить ещё...</button> <% }; %>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/upload-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/search.js" defer></script>

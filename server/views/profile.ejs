@@ -1,0 +1,155 @@
+<% layout('./layout/index') -%>
+<% block('title', "Профиль") -%>
+<% block('url', "/workers") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1 class="photo"><img style="border-radius: 50%; width: 200px; height: 200px" src="<%= avatar%>" alt="Image not found" onerror="this.src='http://77.240.101.171:3000/img/avatars/404.png';"/></h1>
+    <button class="uk-button uk-button-primary save" data-id="<%= _id%>">Сохранить</button>
+  </div>
+  <input type="file" id="selectedFile" style="display: none;" accept="image/x-png,image/pjpeg,image/jpeg,image/tiff,image/webp" data-login="<%= login%>" />
+  <button class="uk-button upload" style="margin-left: 25px" data-id="<%= _id%>" onclick="document.getElementById('selectedFile').click();">Изменить аватар</button>
+  <div class="content info-worker">
+    <div class="line-3">
+      <div class="info-content">
+        <div class="info-content-title">Имя</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="firstname" value="<%= username.split(' ')[0]%>" requred autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Фамилия</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="lastname" value="<%= username.split(' ')[1]%>" requred autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Отчество</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="middlename" value="<%= middlename%>"  autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-3">
+      <div class="info-content">
+        <div class="info-content-title">Дата рождения</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="dob" value="<%= dob%>"  autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Место рождения</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="location" value="<%= location%>" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Место проживания</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="residence" value="<%= residence%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-2">
+      <div class="info-content">
+        <div class="info-content-title">Судимости</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="crimrecord" value="<%= crimrecord%>" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Гражданство</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="nationality" value="<%= nationality%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-2">
+      <div class="info-content">
+        <div class="info-content-title">Контактный телефон Украина</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="phoneUA" value="<%= phoneUA%>" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Контактный телефон Чехия</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="phoneCZ" value="<%= phoneCZ%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Образование</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="education" value="<%= education%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-2">
+      <div class="info-content">
+        <div class="info-content-title">Адрес проживания Чехия</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="addressCZ" value="<%= addressCZ%>" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="info-content">
+        <div class="info-content-title">Стаж работы на фирме</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="experience" value="<%= experience%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Навыки работы на технике</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="skills" value="<%= skills%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Документы, срок въезда, срок окончания визы</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="documents" value="<%= documents%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Текущая должность</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="currentposition" value="<%= currentposition%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Наличие командировок (другие страны ЕС), места, их количество, строки</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="businesstrips" value="<%= businesstrips%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Навыки работы с другими видами техники, наличие водительского удостоверения,
+          рабочие навыки</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="anotherinformation" value="<%= anotherinformation%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+    <div class="line-1">
+      <div class="info-content">
+        <div class="info-content-title">Примечания</div>
+        <div class="info-content-content">
+          <input class="uk-input" type="text" placeholder="" name="notation" value="<%= notation%>" autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>

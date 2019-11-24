@@ -1,0 +1,16 @@
+<ion-view title="News" ng-controller="NewsController as news_ctrl">
+  <div id="app">
+    <main class="screen_tables news-talbes">
+      <div class="bar">
+        <h1>Новости</h1>
+      </div>
+      <ul style="width: 97%;">
+        <li style="margin-bottom: 10px" class="table_line" ng-repeat="news in news_ctrl.news" ng-click="openNews(news.title, news.content)">
+          <div class="title-news">{{news.title}}</div>
+          <div class="date-news">{{formatDate(news.date)}}</div>
+        </li>
+      </ul>
+      <button class="uk-button uk-button-primary upload-news" ng-click="uploadNews()">Загрузить ещё...</button>
+    </main>
+  </div>
+</ion-view>

@@ -1,0 +1,32 @@
+<% layout('./layout/index') -%>
+<% block('title', "Работники") -%>
+<% block('url', "/workers") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Работники </h1>
+    <form class="search" style="display: flex; width:76%" action="/workers/search" method="POST">
+      <input class="uk-textarea" style="height:45px;padding-left:20px;" name="searchString" id="searchString" type="uk-textarea" maxlength="160" autocomplete="off" placeholder="Введите имя или фамилию" />
+      <button class="uk-button" style="margin: 0 15px;">Поиск</button>
+    </form>
+    <button class="uk-button uk-button-primary" uk-toggle="target: #add-user">Добавить работника</button>
+  </div>
+  <div class="content">
+    <ul class="ul-workers ul-documents worker">
+      <% for (let i = 0; i < workers.length; i++) { %>
+      <li data-id="<%= workers[i]._id%>" data-url="/workers/edit" data-url-delete="/workers/delete" data-login="<%= workers[i].login%>">
+        <div class="title"><%= workers[i].username%></div>
+        <ul class="contol">
+          <li class="edit_document"><a href="#" uk-toggle="target: #edit-user">Изменить</a></li>
+          <li class="delete_document"><a href="#">Удалить</a></li>
+        </ul>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+  <% if (total_count > 10) { %> <button class="uk-button uk-button-primary upload-documents" data-url="/workers/upload_w">Загрузить ещё...</button> <% }; %>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/upload-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/search.js" defer></script>

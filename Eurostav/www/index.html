@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <title></title>
+  <link rel="manifest" href="manifest.json">
+  <link href="lib/uikit/dist/css/uikit.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;amp;subset=cyrillic" />
+  <link href="css/app.min.css" rel="stylesheet">
+  <script src="lib/ionic/js/ionic.bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+  <script src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+  <script src="cordova.js"></script>
+  <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+  <script src="lib/uikit/dist/js/uikit.min.js"></script>
+  <script src="js/uikit-icons.min.js"></script>
+  <script src="lib/jquery/dist/jquery.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="lib/moment/min/moment.min.js"></script>
+  <script src="lib/angular-moment/angular-moment.min.js"></script>
+  <script src="lib/socket.io-client/socket.io.js"></script>
+  <script src="http://77.240.101.171:3000/socket.io/socket.io.js"></script>
+  <script src="lib/angular-socket-io/socket.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9xclJXHtjgTMoscylXY8LEDjYtUBKOso" defer></script>
+  <script src="js/services/CacheService.js"></script>
+  <script src="js/services/SocketService.js"></script>
+  <script src="js/controllers/HomeController.js"></script>
+  <script src="js/controllers/MapController.js"></script>
+  <script src="js/controllers/NewsController.js"></script>
+  <script src="js/controllers/SafetyController.js"></script>
+  <script src="js/controllers/TablesController.js"></script>
+  <script src="js/controllers/RoomController.js"></script>
+</head>
+
+<body ng-app="starter" ng-controller="HomeController as home_ctrl">
+  <header class="hide hf">
+    <div class="logo">Euro<span>stav</span></div>
+    <div class="navs">
+      <div class="users pane-icon" on-tap="getUsers()" id="get-users" uk-icon="icon:users;ratio:1.2" uk-toggle="target: #users"></div>
+      <div class="menu panel pane-icon" uk-icon="icon:menu;ratio:1.2" uk-toggle="target: #acc"></div>
+    </div>
+  </header>
+  <ion-nav-view animation="slide-left-right"></ion-nav-view>
+  <footer class="nav hide hf" style="z-index: 1000">
+    <li data-nav="protect" class="active"><a href="" style="user-select: none; pointer-events: none"><i uk-icon="icon:protect;ratio:.6"></i></a></li>
+    <li data-nav="tables"><a href="" style="user-select: none; pointer-events: none"><i uk-icon="icon:tables;ratio:.6"></i></a></li>
+    <li data-nav="chat"><a href="" style="user-select: none; pointer-events: none"><i uk-icon="icon:chat;ratio:.6"></i></a></li>
+    <li data-nav="map"><a href="" style="user-select: none; pointer-events: none"><i uk-icon="icon:map;ratio:.6"></i></a></li>
+  </footer>
+  <div id="acc" uk-offcanvas="overlay: true;">
+    <div class="uk-offcanvas-bar">
+      <div class="uk-offcanvas-close" uk-close=""></div>
+      <div class="account-bar">
+        <div class="line-user">
+          <div class="name">{{ home_ctrl.username }}</div>
+        </div>
+        <ul class="menu tab-m">
+          <li class="tab-li" data-nav="news" uk-toggle="#acc"><a href="">Новости</a></li>
+          <li class="tab-li" data-nav="protect" uk-toggle="#acc"><a href="">Техника безопасности</a></li>
+          <li class="tab-li" data-nav="tables" uk-toggle="#acc"><a href="">Шихтовки</a></li>
+          <li class="panel">
+            <div class="panel-heading"><a href="">Чат</a></div>
+            <ul class="panel-collapse">
+              <li uk-toggle="#acc" class="tab-li" data-nav="chat"><a href="">Общий</a></li>
+              <li>
+                <form ng-submit="openGeneralRoomFor('czech', home_ctrl.psswd_ch)">
+                  <a href="">Чехия</a>
+                  <input class="uk-textarea" type="password" ng-model="home_ctrl.psswd_ch">
+                </form>
+              </li>
+              <li>
+                <form ng-submit="openGeneralRoomFor('slovakia', home_ctrl.psswd_sl)">
+                  <a href="">Словакия</a>
+                  <input class="uk-textarea" type="password" ng-model="home_ctrl.psswd_sl">
+                </form>
+              </li>
+            </ul>
+          </li>
+          <li class="tab-li" data-nav="map" uk-toggle="#acc"><a href="">Адреса строек</a></li>
+        </ul>
+        <ul class="menu exit">
+          <li><a href="#" uk-toggle="#acc" on-tap="logout()">Выход</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="users" uk-offcanvas="overlay: true;">
+    <div class="uk-offcanvas-bar">
+      <div class="uk-offcanvas-close" uk-close=""></div>
+      <div class="title">Список пользователей</div>
+      <ul class="users-list">
+        <div ng-repeat="letter in home_ctrl.letters" data-letter="{{ letter }}">
+          <li class="let">{{ letter }}</li>
+          <li ng-repeat="room in home_ctrl.rooms" ng-if="room.username[0] == letter" on-tap="openRoom(room._id, room.username)" class="let_users" uk-toggle="#users" data-let-id="{{room._id}}" data-username="{{room.username}}">
+            <span class="online-mark offline {{checkOnline(home_ctrl.online, room._id)}}" id="{{ room._id }}"></span>
+            <a><span>{{ room.username }}</span></a>
+          </li>
+        </div>
+      </ul>
+      <p class="uk-button uk-button-primary loadMoreUsers" style="text-align: center; margin-top: 5px; display: none" on-tap="uploadUsers()">Загрузить ещё...</p>
+    </div>
+  </div>
+</body>
+
+</html>

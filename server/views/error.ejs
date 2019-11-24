@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title><%= error.reason%></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/css/uikit.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/js/uikit.min.js"></script>
+  <script src="/js/uikit-icons.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;amp;subset=cyrillic" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+
+<body>
+    <div class="panel" id="app">
+        <main class="error-page">
+            <h1><%= error.status%></h1>
+            <h2><%= error.reason%></h2>
+        </main>
+    </div>
+</body>
+
+</html>

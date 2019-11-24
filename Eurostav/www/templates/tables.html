@@ -1,0 +1,14 @@
+<ion-view title="Tables" ng-controller="TablesController as tables_ctrl">
+  <div id="app">
+    <main class="screen_tables">
+      <div class="bar">
+        <h1>Шихтовки</h1>
+      </div>
+      <li class="table_line" ng-repeat="table in tables_ctrl.tables" ng-click="openTableForm(table.date, {day: formatDate(table.date).split(' ')[0], month: formatDate(table.date).split(' ')[1]})">
+        <div class="num">{{formatDate(table.date).split(' ')[0]}}</div>
+        <div class="date">{{formatDate(table.date).split(' ')[1]}}</div>
+        <div class="status"><i uk-icon="icon:ballot;ratio: .7"></i></div>
+      </li>
+    </main>
+  </div>
+</ion-view>

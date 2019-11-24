@@ -1,0 +1,57 @@
+<ion-view title="{{tb.addr_date}}" ng-controller="TablesController as tb">
+  <div id="app">
+    <main class="screen_tables_in">
+      <div class="bar">
+        <h1>{{tb.date.day}} <span>{{tb.date.month}}</span></h1>
+      </div>
+      <form>
+        <div class="uk-margin">
+          <label class="uk-form-label">Номер крановщика</label>
+          <div class="uk-form-controls phone">
+            <input class="uk-input" ng-model="info.phone" type="tel" maxlength="14" pattern="[+]?\d+" required/>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Адрес стройки</label>
+          <div class="uk-form-controls">
+            <select id="address" class="uk-select" ng-model="tb.title" ng-change="selectCrane(tb.title)" required>
+              <option ng-repeat="address in tb.addresses" value="{{address.title}}">{{address.title}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Тип крана</label>
+          <div class="uk-form-controls">
+            <select id="cranes" class="uk-select cranes_types" required disabled>
+            </select>
+          </div>
+        </div>
+        <div class="times">
+          <div class="uk-margin">
+            <label class="uk-form-label">Приход в</label>
+            <div class="uk-form-controls">
+              <input class="uk-input coming" type="time" value="{{info.coming}}" required/>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <label class="uk-form-label">Уход в</label>
+            <div class="uk-form-controls">
+              <input class="uk-input leaving" type="time" value="{{info.leaving}}" required/>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <label class="uk-form-label">Обед</label>
+            <div class="uk-form-controls">
+              <input class="uk-input lunch" type="time" step="10" value="{{info.lunch}}" min="00:00" max="02:00"/>
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <button class="uk-button uk-button-primary" type="button" ng-click="addTable(tb.addr_date, info.phone, tb.title)">Сохранить и отправить</button>
+        </div>
+        <div class="success"></div>
+        <div class="error"></div>
+      </form>
+    </main>
+  </div>
+</ion-view>

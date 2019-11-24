@@ -1,0 +1,28 @@
+<ion-view title="Chat" ng-controller="RoomController as room_ctrl" >
+  <div id="app" class="app-content" >
+    <main class="screen_chat">
+      <div class="loadmore" uk-icon="icon:triangle-up;ratio:1.2" style="display: none;" on-tap="uploadMessages()"></div>
+      <div class="chat-window">
+        <div ng-repeat="msg in room_ctrl.messages|unique: msg" class="chat-buble {{ isNotCurrentUser(msg.sender) }}">
+          <div class="chat-body">
+            <div class="chat-top">
+              <div class="user">{{ msg.sender }}</div>
+              <div class="time">{{ msg.time }}</div>
+              <div class="delete-message" data-id="{{ msg.salt }}" ng-if="room_ctrl.isAdmin" on-tap="deleteMessage(room_ctrl.roomId, msg.salt)" uk-icon="icon: close; ratio: 0.8"></div>
+            </div>
+            <div class="chat-bottom" ng-switch="msg.image">
+              <img ng-switch-when="true" src="{{ msg.text }}" alt="Изображение не загрузилось"/>
+              <span ng-switch-default>{{ msg.text }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-form">
+        <form ng-submit="sendMessage(room_ctrl.roomId)">
+          <input class="uk-textarea sendinp" type="uk-textarea" maxlength="160" ng-model="room_ctrl.text" placeholder="Введите сообщение.." />
+          <button class="media-button"> <span on-tap="loadImage(room_ctrl.roomId)" uk-icon="icon: image; ratio: 1.6"> </span></button> 
+        </form>
+      </div>
+    </main>
+  </div>
+</ion-view>

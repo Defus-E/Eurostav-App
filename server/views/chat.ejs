@@ -1,0 +1,41 @@
+<% layout('./layout/index') -%>
+<% block('title', "Чат") -%>
+<% block('url', "/archive") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Чат</h1>
+    <% if (!total) { %> <div class="uk-button uk-button-primary loadmore" style="margin: 0 15px;" onclick="uploadMessages()">Загрузить ещё...</div> <% } %>
+  </div>
+  <div class="content screen_chat">
+    <div class="chat-window">
+      <% for (let i = 0; i < messages.length; i++) { %>
+      <div class="chat-buble <%= isNotCurrentUser(messages[i].sender)%>" data-salt="<%= messages[i].salt%>">
+        <div class="chat-body">
+          <div class="chat-top">
+            <div class="user"><%= messages[i].sender %></div>
+            <div class="time"><%= messages[i].time %></div>
+            <div class="delete-message" data-id="<%= messages[i].salt%>" onclick="deleteMessage('<%= messages[i].salt%>')" uk-icon="icon: close; ratio: 0.8"></div>
+          </div>
+          <div class="chat-bottom">
+            <% if (messages[i].image) { %>
+              <img src="<%= messages[i].text %>" style="max-width: 15%" alt="Изображение не загрузилось">
+            <% } else { %>
+              <span><%= messages[i].text %></span>
+            <% }; %>
+          </div>
+        </div>
+      </div>
+      <% }; %>
+    </div>
+    <div class="chat-form">
+      <form id="send" onsubmit="sendMessage(); return false;">
+        <input class="uk-textarea sendinp" type="uk-textarea" maxlength="160" placeholder="Введите сообщение.." />
+      </form>
+    </div>
+  </div>
+</div>
+
+<% function isNotCurrentUser(name) {
+  return user.username != name ? 'he' : 'you';
+} %>

@@ -1,0 +1,45 @@
+<% layout('./layout/index') -%>
+<% block('title', "Новости") -%>
+<% block('url', "/news") -%>
+
+<%
+function formatDate(date) {
+  let monthNames = [
+    "Январь", "Февраль", "Март",
+    "Апрель", "Май", "Июнь", "Июль",
+    "Август", "Сентябрь", "Октябрь",
+    "Ноябрь", "Декабрь"
+  ];
+
+  let day = date.getDate();
+  let monthIndex = date.getMonth();
+  let year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Новости</h1>
+    <button class="uk-button uk-button-primary add-news-button" uk-toggle="target: #add-news">Добавить новость</button>
+  </div>
+  <div class="content">
+    <ul class="news-list ul-documents news">
+      <% for (let i = 0; i < news.length; i++) { %>
+        <li data-id="<%= news[i]._id%>" data-url-delete="/news/delete" data-url="/news/edit">
+          <div class="title"><%= news[i].title %></div>
+          <div class="date"><%=formatDate(news[i].date)%></div>
+          <ul class="contol">
+            <li class="edit_document" uk-toggle="target: #add-news"><a href="#">Изменить</a></li>
+            <li class="delete_document"><a href="#">Удалить</a></li>
+          </ul>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+   <% if (total_count > 10) { %> <button class="uk-button uk-button-primary upload-documents" data-url='/news/upload'>Загрузить ещё...</button> <% }; %>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/upload-documents.js" defer></script>

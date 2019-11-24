@@ -1,0 +1,26 @@
+<% layout('./layout/index') -%>
+<% block('title', "Настройки") -%>
+<% block('url', "/settings") -%>
+
+<div class="d_content">
+  <div class="top-bar">
+    <h1>Настройки</h1>
+    <button class="uk-button uk-button-default"  uk-toggle="target: #add-admin">Добавить админа</button>
+  </div>
+  <div class="content">
+    <ul class="table-list settings">
+      <% for (let i = 0; i < admins.length; i++) { %>
+      <li data-id="<%= admins[i]._id%>" data-url="/settings/edit" data-url-delete="/settings/delete" data-login="<%= admins[i].login%>">
+        <div class="title"><%= admins[i].username%></div>
+        <ul class="contol">
+          <li class="edit_document" style="margin-left: auto"><a href="#" uk-toggle="target: #edit-admin">Изменить</a></li>
+          <li class="delete_document"><a href="#">Удалить</a></li>
+        </ul>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-documents.js" defer></script>
+<script src="http://77.240.101.171:3000/js/upload-documents.js" defer></script>

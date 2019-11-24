@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es5",
+		"downlevelIteration": true,
+		"sourceMap": true,
+		"strictFunctionTypes": false,
+		"lib": ["es2017", "es2015", "dom", "es6"]
+	},
+	"include": [
+		"**.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"firefunctions"
+	]
+}

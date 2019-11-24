@@ -1,0 +1,295 @@
+<div id="add-loc" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/building/add">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Название стройки</label>
+          <div class="uk-form-controls">
+            <input class="uk-input fix-input-1" type="text" name="title" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Координаты</label>
+          <div class="uk-form-controls duble">
+            <input class="uk-input fix-input-1" type="text" name="x" autocomplete="off"
+              pattern="[+-]?([0-9]*[.])?[0-9]+" placeholder="" />
+            <input class="uk-input fix-input-1" type="text" name="y" autocomplete="off"
+              pattern="[+-]?([0-9]*[.])?[0-9]+" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Краны</label>
+          <div class="uk-form-controls duble">
+            <input class="uk-input fix-input-1" type="text" name="marks" autocomplete="off" placeholder="" />
+            <input class="uk-input fix-input-1" type="text" name="series" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <div class="uk-form-controls">
+            <select name="place" class="uk-select" required>
+              <option value="Чехия">Чехия</option>
+              <option value="Словакия">Словакия</option>
+            </select>
+          </div>
+        </div>
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Добавить стройку</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="add-auth" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-auth">
+      <form class="modal" method="POST" action="/login/add">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Пароль</label>
+          <div class="uk-form-controls">
+            <input class="uk-input fix-input-1" type="password" name="password" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Повторите пароль</label>
+          <div class="uk-form-controls">
+            <input class="uk-input fix-input-1" type="password" name="confirm" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <input type="text" name="room" style="display: none"/>
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Установить</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="edit-loc" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/building/edit">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Название стройки</label>
+          <div class="uk-form-controls">
+            <input class="uk-input fix-input-1" type="text" name="title" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Координаты</label>
+          <div class="uk-form-controls duble">
+            <input class="uk-input fix-input-1" type="text" name="x" autocomplete="off"
+              pattern="[+-]?([0-9]*[.])?[0-9]+" placeholder="" />
+            <input class="uk-input fix-input-1" type="text" name="y" autocomplete="off"
+              pattern="[+-]?([0-9]*[.])?[0-9]+" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label">Краны</label>
+          <div class="uk-form-controls duble">
+            <input class="uk-input fix-input-1" type="text" name="marks" autocomplete="off" placeholder="" />
+            <input class="uk-input fix-input-1" type="text" name="series" autocomplete="off" placeholder="" />
+          </div>
+        </div>
+        <div class="uk-margin">
+            <div class="uk-form-controls">
+              <select name="place" class="uk-select" required>
+                <option value="Чехия">Чехия</option>
+                <option value="Словакия">Словакия</option>
+              </select>
+            </div>
+          </div>
+        <input type="text" name="id" style="display: none" />
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Применить</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="add-user" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/workers/add" id="add-worker">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Логин</label>
+              <input class="uk-input" type="text" name="login" placeholder="Логин" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Пароль</label>
+              <input class="uk-input" type="password" name="password" placeholder="Пароль" autocomplete="off"
+                required />
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Имя</label>
+              <input class="uk-input" type="text" name="firstname" placeholder="Имя" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Фамилия</label>
+              <input class="uk-input" type="text" name="lastname" placeholder="Фамилия" autocomplete="off" required />
+            </div>
+          </div>
+        </div>
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Добавить работника</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="edit-user" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/workers/edit" id="edit-worker">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Логин</label>
+              <input class="uk-input" type="text" name="login" placeholder="Логин" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Пароль</label>
+              <input class="uk-input" type="password" name="password" placeholder="Пароль" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Имя</label>
+              <input class="uk-input" type="text" name="firstname" placeholder="Имя" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Фамилия</label>
+              <input class="uk-input" type="text" name="lastname" placeholder="Фамилия" autocomplete="off" required />
+            </div>
+          </div>
+        </div>
+        <input type="text" name="id" style="display: none" />
+        <div style="display: flex;padding-top: 10px;">
+            <a class="uk-button uk-button-primary more" type="button">Подробнее</a>
+            <p class="uk-text-right" style="margin-top: 0; margin-bottom: 0;
+            margin-left: auto;">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+              <button class="uk-button uk-button-primary" type="submit">Применить</button>
+            </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="add-admin" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/settings/add" id="add-admin">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Логин</label>
+              <input class="uk-input" type="text" name="login" placeholder="Логин" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Пароль</label>
+              <input class="uk-input" type="password" name="password" placeholder="Пароль" autocomplete="off"
+                required />
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Имя</label>
+              <input class="uk-input" type="text" name="firstname" placeholder="Имя" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Фамилия</label>
+              <input class="uk-input" type="text" name="lastname" placeholder="Фамилия" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Добавить администратора</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="edit-admin" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-loc">
+      <form class="modal" method="POST" action="/settings/edit" id="edit-admin">
+        <div class="success"></div>
+        <div class="error"></div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Логин</label>
+              <input class="uk-input" type="text" name="login" placeholder="Логин" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Пароль</label>
+              <input class="uk-input" type="password" name="password" placeholder="Пароль" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <div class="uk-form-controls duble">
+            <div>
+              <label class="uk-form-label">Имя</label>
+              <input class="uk-input" type="text" name="firstname" placeholder="Имя" autocomplete="off" required />
+            </div>
+            <div>
+              <label class="uk-form-label">Фамилия</label>
+              <input class="uk-input" type="text" name="lastname" placeholder="Фамилия" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+        <input type="text" name="id" style="display: none" />
+        <p class="uk-text-right" style="margin-bottom: 0;">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" type="submit">Применить</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="add-news" uk-modal="">
+  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <div class="add-news">
+      <form class="modal" method="POST" action="/news/add" id="edit-news">
+        <div class="uk-margin">
+          <input class="uk-input" type="text" name="title" placeholder="Заголовок" autocomplete="off" required />
+        </div>
+        <div class="uk-margin">
+          <div id="editor" name="content"></div>
+        </div>
+        <input type="text" name="id" style="display:none" value="" />
+        <p class="uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Отмена</button>
+          <button class="uk-button uk-button-primary" id="add-news-button" type="submit">Добавить новость</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

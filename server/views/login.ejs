@@ -1,0 +1,21 @@
+<% layout('./layout/index') -%>
+<% block('title', "Авторизация") -%>
+
+<form class="modal" method='POST' action='/login/admin'>
+  <div class="logo">
+    Euro<span>stav</span></div>
+  <div class="error"></div>
+  <div class="uk-margin">
+    <div class="uk-inline"><span class="uk-form-icon" uk-icon="icon: user; ratio:.9"></span>
+      <input class="uk-input" type="text" name="login" placeholder="Логин" autocomplete="off" required/>
+    </div>
+  </div>
+  <div class="uk-margin">
+    <div class="uk-inline"><span class="uk-form-icon" uk-icon="icon: lock; ratio:.9"></span>
+      <input class="uk-input" type="password" name="password" placeholder="Пароль" autocomplete="off" required/>
+    </div>
+  </div>
+  <div class="uk-margin">
+    <button class="uk-button uk-button-default">Авторизация</button>
+  </div>
+</form>

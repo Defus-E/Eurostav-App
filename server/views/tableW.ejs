@@ -1,0 +1,178 @@
+<% layout('./layout/index') -%>
+<% block('title', 'Шихтовки ' + staticData.username) -%>
+<% block('url', "/tables") -%>
+
+<%
+let worked = [];
+let lunched = [];
+let clearTime = [];
+
+function getFullTime(firstDate, secondDate, flag) {
+  let getDate = (string) => new Date(0, 0, 0, string.split(':')[0], string.split(':')[1]);
+  let different = (getDate(secondDate) - getDate(firstDate));
+  let differentRes, hours, minuts;
+  
+  if(different > 0) {
+    differentRes = different;
+    hours = Math.floor((differentRes % 86400000) / 3600000);
+    minuts = Math.round(((differentRes % 86400000) % 3600000) / 60000);
+  } else {
+    differentRes = Math.abs((getDate(firstDate) - getDate(secondDate)));
+    hours = Math.floor(24 - (differentRes % 86400000) / 3600000);
+    minuts = Math.round(60 - ((differentRes % 86400000) % 3600000) / 60000);
+  }
+
+  let result = (hours < 10 ? '0' + hours : hours) + ':' + (minuts < 10 ? '0' + minuts : minuts);
+
+  if (!flag)
+    worked.push(result);
+  
+  return result;
+}
+
+function addTimeToLunchArray(lunchTime) {
+  lunched.push(lunchTime);
+  return lunchTime;
+}
+
+function getFullTimeWithoutLunch(firstDate, secondDate, lunchDate) {
+  let newSecondTime = getFullTime(lunchDate, secondDate, true);
+  let result = getFullTime(firstDate, newSecondTime, true);
+
+  clearTime.push(result);
+
+  return result;
+}
+
+function sumOfTimes(arrayOfTimes) { 
+  let result = arrayOfTimes.reduce((time1, time2) => {
+    let hour = 0;
+    let minute = 0;
+
+    let splitTime1 = time1.split(':');
+    let splitTime2 = time2.split(':');
+
+    hour = parseInt(splitTime1[0]) + parseInt(splitTime2[0]);
+    minute = parseInt(splitTime1[1]) + parseInt(splitTime2[1]);
+    hour = minute >= 60 ? hour + 1 : hour;
+    minute = minute > 60 ? minute - 60 : hour == 60 ? 0 : minute;
+    
+    let response = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute);
+
+    return response;
+  });
+  
+  return result;
+}
+%>
+
+<div class="d_content">
+<div class="top-bar">
+  <h1>
+    Шихтовки &nbsp;<span><%= staticData.username%></span>
+    </h1>
+  <button class="uk-button uk-button-primary save" data-date="<%= date%>" data-worker="<%= staticData.login%>">Сохранить</button>
+</div>
+<div class="content">
+  <div class="table-print no-d">
+    <div class="print-content">
+      <div class="info-line">
+        <div class="info-content">
+          <div class="info-content-title">Дата</div>
+          <div class="info-content-content">
+            <input class="uk-input" type="text" placeholder="" value="<%= date%>" disabled/>
+          </div>
+        </div>
+        <div class="info-content">
+          <div class="info-content-title">Кран</div>
+          <div class="info-content-content">
+            <select class="uk-select change-table-crane">
+              <% for (let i = 0; i < staticData.cranes.length; i++) { %>
+                <option value="<%= staticData.cranes[i]%>"><%= staticData.cranes[i]%></option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="info-content">
+          <div class="info-content-title">Номер крановщика</div>
+          <div class="info-content-content">
+            <select class="uk-select">
+              <% for (let i = 0; i < staticData.phones.length; i++) { %>
+                <option value="<%= addresses[i]%>"><%= staticData.phones[i]%></option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="info-content">
+          <div class="info-content-title">Адрес стройки</div>
+          <div class="info-content-content">
+            <select class="uk-select change-table-address" data-date="<%= date%>" data-worker="<%= staticData.login%>">
+              <% for (let i = 0; i < addresses.length; i++) { %>
+                <option value="<%= addresses[i]%>"><%= addresses[i]%></option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="info-content">
+          <div class="info-content-title">Работник</div>
+          <div class="info-content-content">
+            <input class="uk-input" type="text" placeholder="" value="<%= staticData.username%>" disabled/>
+          </div>
+        </div>
+      </div>
+      <div class="info-table">
+        <div class="info-table-line">
+          <div class="info-table-item">Число</div>
+          <div class="info-table-item">Пришел</div>
+          <div class="info-table-item">Ушел</div>
+          <div class="info-table-item">Проработал</div>
+          <div class="info-table-item">Обед</div>
+          <div class="info-table-item">Чистое время</div>
+          <div class="info-table-item">Крановщик</div>
+        </div>
+        <% for(let i = 0; i < tablesForAddress.length; i++) { %>
+          <div class="info-table-line itl" data-date="<%= tablesForAddress[i].day%>">
+            <div class="info-table-item num"><%= tablesForAddress[i].day < 10 ? '0' + tablesForAddress[i].day : tablesForAddress[i].day%></div>
+            <div class="info-table-item">
+              <input class="uk-input" type="text" placeholder="" name="coming" value="<%= tablesForAddress[i].coming%>"/>
+            </div>
+            <div class="info-table-item">
+              <input class="uk-input" type="text" placeholder="" name="leaving" value="<%= tablesForAddress[i].leaving%>"/>
+            </div>
+            <div class="info-table-item">
+              <input class="uk-input worked" type="text" placeholder="" value="<%= getFullTime(tablesForAddress[i].coming, tablesForAddress[i].leaving)%>" disabled/>
+            </div>
+            <div class="info-table-item">
+              <input class="uk-input" type="text" placeholder="" name="lunch" value="<%= addTimeToLunchArray(tablesForAddress[i].lunch)%>"/>
+            </div>
+            <div class="info-table-item">
+              <input class="uk-input clearTime" type="text" placeholder="" value="<%= getFullTimeWithoutLunch(tablesForAddress[i].coming, tablesForAddress[i].leaving, tablesForAddress[i].lunch)%>" disabled/>
+            </div>
+            <div class="info-table-item">
+              <input class="uk-input username" type="text" placeholder="" value="<%= tablesForAddress[i].username %>" disabled/>
+            </div>
+          </div>
+        <% }; %>
+      <div class="bottom-table">
+        <div class="bottom-table-line">
+          <div class="info-table-item total-time">Общее время</div>
+          <div class="info-table-item">
+            <label class="uk-form-label">Проработал</label>
+            <input class="uk-input" type="text" placeholder="" id="worked" value="<%=sumOfTimes(worked)%>" disabled/>
+          </div>
+          <div class="info-table-item">
+            <label class="uk-form-label">Обед</label>
+            <input class="uk-input" type="text" placeholder="" id="lunched" value="<%=sumOfTimes(lunched)%>" disabled/>
+          </div>
+          <div class="info-table-item">
+            <label class="uk-form-label">Чистое время</label>
+            <input class="uk-input" type="text" placeholder="" id="clearTime" value="<%=sumOfTimes(clearTime)%>" disabled/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="http://77.240.101.171:3000/js/manage-table.js" defer></script>
