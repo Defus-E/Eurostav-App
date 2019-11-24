@@ -23,7 +23,6 @@ import loadUser from './middleware/loadUser';
 import sendHttpError from './middleware/sendHttpError';
 
 const PORT: number = +process.env.PORT || 3000;
-const rfs = require('rotating-file-stream');
 const allowedOrigins: string[] = [
   'capacitor://localhost',
   'ionic://localhost',
