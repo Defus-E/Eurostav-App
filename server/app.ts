@@ -23,6 +23,7 @@ import loadUser from './middleware/loadUser';
 import sendHttpError from './middleware/sendHttpError';
 
 const PORT: number = +process.env.PORT || 3000;
+const rfs = require('rotating-file-stream');
 const allowedOrigins: string[] = [
   'capacitor://localhost',
   'ionic://localhost',
@@ -73,7 +74,7 @@ export class App {
 	private setHandlineMiddlewares(): void {
 		this._app.use(statics(path.join(__dirname, 'public')));
 
-		this._app.use(morgan('prod'));
+		this._app.use(morgan('combined'));
 		this._app.use(bodyParser.urlencoded({ extended: true }));
 		this._app.use(bodyParser.json());
 

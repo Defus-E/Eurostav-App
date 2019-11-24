@@ -1,0 +1,16 @@
+{
+  "apps": [{
+    "name": "Eurostav",
+    "exec_mode": "cluster",
+    "instances": "1",
+    "script": "./app.ts",
+    "out_file": "./logs/out.log",
+    "error_file": "./logs/err.log",
+    "log_file": "./logs/combined.log",
+    "interpreter": "ts-node",
+    "env": {
+      "PORT": 3000,
+      "NODE_ENV": "production"
+    }
+  }]
+}

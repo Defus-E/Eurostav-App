@@ -34,5 +34,7 @@ Eurostav/Thumbs.db
 Eurostav/UserInterfaceState.xcuserstate
 
 server/node_modules
+server/tables/**/*
+server/logs
 server/start.bat
-server/dev.bat
+server/daemon.bat
