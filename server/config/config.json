@@ -1,9 +1,4 @@
 {
-	"rotation": {
-		"size": "10M",
-		"interval": "1d",
-		"compress": "gzip"
-	},
 	"mongoose": {
 		"uri": "mongodb://localhost/eurostav",
 		"options": {

@@ -46,10 +46,7 @@ export class App {
 		this._app.set('views', path.join(__dirname, 'views'));
 		this._app.set('view engine', 'ejs');
 		this._app.set('trust proxy', 1);
-
-		this._app.use(favicon(path.join(__dirname, 'public/icons/favicon.ico')));
-		this._app.use(cors({origin: allowedOrigins}));
-		this._app.use(helmet());
+		console.log('[\x1b[32m OK \x1b[0m] Initializing application variables');
 
 		this._app.disable('x-powered-by');
  
@@ -59,11 +56,14 @@ export class App {
 		
 		this._app.use('/', Router.routes);
 		this._app.use(this.errorHandler.bind(this));
+		console.log('[\x1b[32m OK \x1b[0m] Routing mechanism');
 	}
 
 	public init(): void {
-		const server = http.createServer(this._app).listen(this._port, () => console.log(`\x1b[32mServer started!\x1b[0m`));
+		const server = http.createServer(this._app).listen(this._port, () => console.log('[\x1b[32m OK \x1b[0m]\x1b[1m Server is started\x1b[0m'));
 		const io = Socket.init(server);
+		
+		server.on('error', console.error.bind(console, '[\x1b[31m OK \x1b[0m]\x1b[1m Server is started\x1b[0m\n'));
 	}
 
 	public static get Instance(): App {
@@ -71,11 +71,20 @@ export class App {
 	}
 
 	private setHandlineMiddlewares(): void {
+		this._app.use(favicon(path.join(__dirname, 'public/icons/favicon.ico')));
+		this._app.use(cors({origin: allowedOrigins}));
+		this._app.use(helmet());
+		console.log('[\x1b[32m OK \x1b[0m] Setting favicon');
+		console.log('[\x1b[32m OK \x1b[0m] Setting CORS policy');
+		console.log('[\x1b[32m OK \x1b[0m] Setting helmet mechanism');
+
 		this._app.use(statics(path.join(__dirname, 'public')));
+		console.log('[\x1b[32m OK \x1b[0m] Checking for the static files');
 
 		this._app.use(morgan('combined'));
 		this._app.use(bodyParser.urlencoded({ extended: true }));
 		this._app.use(bodyParser.json());
+		console.log('[\x1b[32m OK \x1b[0m] Initializing handline middlewares');
 
 		this._app.use(cookieParser(nconf.get('session:secret')));
 		this._app.use(session({
@@ -87,11 +96,13 @@ export class App {
     	saveUninitialized: false,
 			store: sessionStore
 		}));
+		console.log('[\x1b[32m OK \x1b[0m] Starting the session');
 	}
 
 	private setCustomMiddlewares(): void {
 		this._app.use(sendHttpError);
 		this._app.use(loadUser);
+		console.log('[\x1b[32m OK \x1b[0m] Initializing custom middlewares');
 	}
 
 	private setDataBase(): void {
@@ -99,14 +110,15 @@ export class App {
 		// mongoose.set('debug', true);
 
 		this._db = mongoose.connection;
-		this._db.on('error', console.error.bind(console, 'MongoDB Connection error'));
+		this._db.on('connected', console.log.bind(console, '[\x1b[32m OK \x1b[0m] Connecting to the database'));
+		this._db.on('error', console.error.bind(console, '[\x1b[31m OK \x1b[0m] Connecting to the database\n'));
 	}
 
 	private errorHandler(err: Error, req: Request, res: {[key: string]: any}, next: NextFunction): void {
 		if (err instanceof HttpError) {
 			res.sendHttpError(err);
 		} else {
-			console.error(err);
+			console.error(err,'err');
 			if (this._app.get('env') === 'development') {
 				errorHandler()(err, req, res, next);
 			} else {

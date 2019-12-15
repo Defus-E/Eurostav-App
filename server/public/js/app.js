@@ -162,6 +162,7 @@ $(document).ready(function () {
           }
         },
         403: jqXHR => {
+          console.log(jqXHR);
           const error = JSON.parse(jqXHR.responseText);
           
           $('.success').text('');
