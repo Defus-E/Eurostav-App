@@ -77,5 +77,5 @@ export default class AuthorizeController {
 
 			next(err);
     }
-  }
+	}
 }
