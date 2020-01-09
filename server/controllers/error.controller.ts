@@ -1,4 +1,4 @@
-import { Router as ExpressRouter, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import HttpError from '../error';
 
 export default class ErrorConroller {

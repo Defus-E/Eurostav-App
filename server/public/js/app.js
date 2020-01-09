@@ -198,7 +198,7 @@ $(document).ready(function () {
       } else if (url == '/map') {
         return $.getScript('js/load-map.js');
       } else if (url == '/archive') {
-        return;
+        return false;
       }
  
       $.getScript("js/manage-documents.js");
@@ -206,6 +206,7 @@ $(document).ready(function () {
     });
 
     window.history.pushState(url, title, url);
+    return false;
   });
 
   $('.admin_place').on('click', function(e) {

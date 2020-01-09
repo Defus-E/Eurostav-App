@@ -1,3 +1,4 @@
+import * as moment from 'moment-timezone';
 import * as crypto from 'crypto';
 import * as rimraf from 'rimraf';
 import * as path from 'path';
@@ -79,7 +80,37 @@ const schema: Schema = new Schema({
 	clearPathAvatar: String,
 	businesstrips: String,
 	currentposition: String,
-	anotherinformation: String
+	anotherinformation: String,
+	tables: [{
+		date: {
+			type: Date,
+			default: moment.tz(Date.now(), "Europe/Moscow")
+		},
+		saved: {
+			type: Boolean,
+			default: false
+		},
+		phone: {
+			type: String,
+			required: true
+		},
+		lunch: {
+			type: String,
+			default: "00:00:00"
+		},
+		coming: String,
+		leaving: String,
+		address: {
+			type: String,
+			required: true
+		},
+		crane: {
+			type: String,
+			required: true
+		},
+		login: String,
+		day: Number
+	}]
 });
 
 schema.method('encryptPassword', function (password: string): string {

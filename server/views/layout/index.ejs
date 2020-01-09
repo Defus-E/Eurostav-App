@@ -29,6 +29,10 @@
 <body>
   <div class="<%= user ? 'panel' : ''%>" id="app">
     <% if (user) { %>
+    <div class="mobile-nav">
+      <div class="logo">Euro<span>stav</span></div>
+      <div class="menu" uk-toggle="target: #acc"><span></span><span></span><span></span></div>
+    </div>
     <aside>
       <div class="aside">
         <div class="logo">Euro<span>stav</span></div>

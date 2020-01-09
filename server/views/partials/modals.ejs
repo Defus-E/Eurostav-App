@@ -1,3 +1,26 @@
+<div id="acc" uk-offcanvas="overlay: true;">
+  <div class="uk-offcanvas-bar">
+    <button class="uk-offcanvas-close" type="button" uk-close=""></button>
+    <div class="account-bar">
+      <div class="line-user">
+        <!-- <div class="logo">Euro<span>stav</span></div> -->
+      </div>
+      <ul class="menu" style="z-index: 10000;">
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/news' ? 'active' : ''%>"><a data-title="Новости" href="/news">Новости</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/building' ? 'active' : ''%>"><a data-title="Стройки" href="/building">Стройки</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/workers' ? 'active' : ''%>"><a data-title="Работники" href="/workers">Работники</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/tables' ? 'active' : ''%>"><a data-title="Шихтовки" href="/tables">Шихтовки</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/archive' ? 'active' : ''%>"><a data-title="Чат" href="/archive">Чат</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/map' ? 'active' : ''%>"><a data-title="Карта" href="/map">Карта</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/safety' ? 'active' : ''%>"><a data-title="Техника безопасности" href="/safety">Техника безопасности</a></li>
+        <li uk-toggle="#acc" class="admin_nav <%= blocks.url == '/settings' ? 'active' : ''%>"><a data-title="Настройки админки" href="/settings">Настройки админки</a></li>
+      </ul>
+      <ul class="menu exit">
+        <li><a href="/login" uk-toggle="#acc">Выход</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 <div id="add-loc" uk-modal="">
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div class="add-loc">
