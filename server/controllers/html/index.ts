@@ -1,11 +1,10 @@
-import { IUserNames } from '../../interfaces/ITableDocument';
-import { clear } from 'nconf';
+import { IUserNames } from '../../interfaces/IUserDocument';
 
 let worked: string[] = [];
 let lunched: string[] = [];
 let clearTime: string[] = [];
 
-export default (table: IUserNames): string => {
+export default (out: IUserNames): string => {
   worked = [];
   lunched = [];
   clearTime = [];
@@ -23,14 +22,14 @@ export default (table: IUserNames): string => {
     <table>
       <thead>
         <tr>
-          <td colspan="3" class="td-head"><b>Дата</b><br><span>${table.date}</span></td>
-          <td colspan="3" class="td-head"><b>Кран</b><br><span>${table.cranes}</span></td>
-          <td colspan="3" class="td-head"><b>Номер крановщика</b><br><span>${table.phones}</span></td>
+          <td colspan="3" class="td-head"><b>Дата</b><br><span>${out.date}</span></td>
+          <td colspan="3" class="td-head"><b>Кран</b><br><span>${out.cranes}</span></td>
+          <td colspan="3" class="td-head"><b>Номер крановщика</b><br><span>${out.phones}</span></td>
         </tr>
         <tr>
-          <td colspan="3" class="td-head"><b>Адрес стройки</b><br><span>${table.address}</span></td>
-          <td colspan="3" class="td-head"><b>Работник</b><br><span>${table.username}</span></td>
-          <td colspan="3" class="td-head"><b>Логин</b><br><span>${table.login}</span></td>
+          <td colspan="3" class="td-head"><b>Адрес стройки</b><br><span>${out._id.address}</span></td>
+          <td colspan="3" class="td-head"><b>Работник</b><br><span>${out.username}</span></td>
+          <td colspan="3" class="td-head"><b>Логин</b><br><span>${out._id.login}</span></td>
         </tr>
       </thead>
     </table>
@@ -45,14 +44,14 @@ export default (table: IUserNames): string => {
           <th>Чистое время</th>
           <th>Крановщик</th>
         </tr>
-        ${table.otherData.map((item, i) => `<tr>
-          <td>${item.day < 10 ? '0' + item.day : item.day}</td>
-          <td>${item.coming}</td>
-          <td>${item.leaving}</td>
-          <td>${getFullTime(item.coming, item.leaving)}</td>
-          <td>${addTimeToLunchArray(item.lunch)}</td>
-          <td>${getFullTimeWithoutLunch(item.coming, item.leaving, item.lunch)}</td>
-          <td>${item.username}</td>
+        ${out.tables.map((table, i) => `<tr>
+          <td>${table.day < 10 ? '0' + table.day : table.day}</td>
+          <td>${table.coming}</td>
+          <td>${table.leaving}</td>
+          <td>${getFullTime(table.coming, table.leaving)}</td>
+          <td>${addTimeToLunchArray(table.lunch)}</td>
+          <td>${getFullTimeWithoutLunch(table.coming, table.leaving, table.lunch)}</td>
+          <td>${out.username}</td>
         </tr>`).join('')}
         <tr>
           <td colspan="3">Общее время</td>

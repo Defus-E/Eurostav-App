@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'ngCordova', 'LocalStorageModule', 'btford.socket-io', 'angularMoment', 'ui'])
+angular.module('starter', ['ionic', 'ngCordova', 'LocalStorageModule', 'btford.socket-io', 'ui'])
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
       $ionicPlatform.onHardwareBackButton(function (e) {

@@ -68,14 +68,13 @@ export default class Socket {
     });
     
     socket.on('send:message', async (room: string, msg: IArchiveMessage) => {
-      const { salt, sender, text, time, image } = msg;
+      const { salt, sender, text, image } = msg;
       const roomId: string | IRoomId = this.generateRoomId(room, idSender, idReciever);
-      const reciever: string = room == 'all' ? 'public' : room == 'czech' || room == 'slovakia' ? room : idReciever; 
+      const reciever: string = room == 'all' ? 'public' : room == 'czech' || room == 'slovakia' ? room : idReciever;
       const _sender: string = room == 'all' ? 'all' : room == 'czech' || room == 'slovakia' ? room : idSender;
-
-      await Archive.add(roomId, salt, sender, text, time, image);
-
-      socket.broadcast.to(reciever).emit('get:message', _sender, msg);
+      const message = await Archive.add(roomId, salt, sender, text, image);
+      
+      socket.broadcast.to(reciever).emit('get:message', _sender, message, message.time, new Date());
     });
 
     socket.on('remove:message', async (room: string, salt: string) => {

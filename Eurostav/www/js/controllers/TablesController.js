@@ -4,7 +4,6 @@
 
     function TablesController($scope, $stateParams, $state, $http, localStorageService, cache) {
       var self = this;
-      var line = cache.getLines('tables');
       
       self.current_user = localStorageService.get('username');
       self.addr_date = localStorageService.get('addr_date');
@@ -27,25 +26,23 @@
               $('select#cranes').val($stateParams.crane);
             }, 500);
           })
-          .catch(function(err) {return console.error(err)});
-      } else if (!line.cached) {
-        $http.get('http://77.240.101.171:3000/tables/list')
-          .then(function(res) {
-            var tables = res.data.tables;
-            self.tables = tables;
-            cache.setLines('tables', tables, true);
-          })
-          .catch(function(err) {return console.error(err)});
+          .catch(function(err) { console.error(err) });
       } else {
-        self.tables = line.content;
+        $http.get('http://77.240.101.171:3000/tables/list')
+          .then(function(res) { 
+            self.tables = res.data.tables;
+            self.nextSixDays = res.data.nextSixDays ? 0 : 6;
+          });
       }
       
       $scope.addTable = addTable;
       $scope.selectCrane = selectCrane;
       $scope.formatDate = formatDate;
       $scope.openTableForm = openTableForm;
+      $scope.range = range;
 
       function addTable(date, phone, title) {
+        var id = localStorageService.get('userId');
         var type = $('.cranes_types').val();
         var coming = $('.coming').val();
         var leaving = $('.leaving').val();
@@ -66,10 +63,9 @@
         }
           
         var data = {
+          id: id,
           date: date,
           table_d: {
-            _id: self.userId,
-            username: self.current_user,
             phone: phone, 
             address: title, 
             crane: type,
@@ -84,7 +80,7 @@
             $('.success').text('Добавлено!');
             $('.error').text('');
           })
-          .catch(function(err) {return console.error(err)});
+          .catch(function(err) { console.error(err) });
 
         setTimeout(() => {
           $('.success').text('');
@@ -92,25 +88,31 @@
         }, 3000);
       }
 
-      function formatDate(date) {
+      function range(min, max, step) {
+        step = step || 1;
+        var input = [];
+        for (var i = min; i <= max; i += step) {
+            input.push(i);
+        }
+        return input;
+      }
+
+      function formatDate(month) {
         var monthNames = [
           "Январь", "Февраль", "Март",
           "Апрель", "Май", "Июнь", "Июль",
           "Август", "Сентябрь", "Октябрь",
           "Ноябрь", "Декабрь"
         ];
-        
-        var day = new Date(date).getDate();
-        var monthIndex = new Date(date).getMonth();
-
-        day = day < 10 ? '0' + day : day;
       
-        return day + ' ' + monthNames[monthIndex];
+        return monthNames[month];
       }
 
-      function openTableForm(addr_date, date) {
+      function openTableForm(day, month) {
         var id = localStorageService.get('userId');
-
+        var date = { day: day, month: month };
+        var addr_date = new Date(Date.UTC(new Date().getFullYear(), month, day)).toISOString();
+        
         localStorageService.set('addr_date', addr_date);
         localStorageService.set('date', date);
 
@@ -124,7 +126,7 @@
               $state.go('table', info);
             }
           })
-          .catch(function(err) {return console.error(err)});
+          .catch(function(err) { console.error(err) });
       }
 
       function selectCrane(title) {

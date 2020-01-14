@@ -42,7 +42,7 @@ $(document).ready(function () {
             case '/workers/upload_w':
               for (let i = 0; i < res.workers.length; i++) {
                 let worker= res.workers[i];
-                li = `<li data-id="${worker._id}" data-url="/workers/edit" data-url-delete="/workers/delete" data-login="${worker.login}"><div class="title">${worker.username}</div><ul class="contol"><li class="edit_document"><a href="#" uk-toggle="target: #edit-user">Изменить</a></li><li class="delete_document"><a href="#">Удалить</a></li></ul></li>`;
+                li = `<li data-id="${worker._id}" data-url="/workers/edit" data-url-delete="/workers/delete" data-login="${worker.login}"><div class="title" uk-toggle="target: #profile">${worker.username}</div><ul class="contol"><li class="edit_document"><a href="#" uk-toggle="target: #edit-user">Изменить</a></li><li class="delete_document"><a href="#">Удалить</a></li></ul></li>`;
                 ul.append(li);
               }
               $.getScript("js/manage-documents.js");

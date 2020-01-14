@@ -121,6 +121,7 @@
               self.username = '';
               self.userId = '';
     
+              cache.clear();
               $state.go('login');
             }
           });
@@ -145,6 +146,7 @@
 
       $('.panel-heading').off('click');
 
+      cache.clear();
       socket.emit('logout');
       $state.go('login');
     }

@@ -2,7 +2,7 @@
 <% block('title', "Работники") -%>
 <% block('url', "/workers") -%>
 
-<div class="d_content">
+<div class="d_content worker">
   <div class="top-bar">
     <h1>Работники </h1>
     <form class="search" style="display: flex; width:76%" action="/workers/search" method="POST">
@@ -15,7 +15,7 @@
     <ul class="ul-workers ul-documents worker">
       <% for (let i = 0; i < workers.length; i++) { %>
       <li data-id="<%= workers[i]._id%>" data-url="/workers/edit" data-url-delete="/workers/delete" data-login="<%= workers[i].login%>">
-        <div class="title"><%= workers[i].username%></div>
+        <div class="title" uk-toggle="target: #profile"><%= workers[i].username%></div>
         <ul class="contol">
           <li class="edit_document"><a href="#" uk-toggle="target: #edit-user">Изменить</a></li>
           <li class="delete_document"><a href="#">Удалить</a></li>

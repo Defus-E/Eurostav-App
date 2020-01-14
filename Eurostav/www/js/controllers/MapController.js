@@ -8,14 +8,19 @@
     if (!line.cached) {
       $http.get('http://77.240.101.171:3000/building/get?place=' + localStorageService.get('place'))
       .then(function (res) { cache.setLines('map', res.data.addresses, true); initMap(res.data.addresses) })
-      .catch(function (err) { return console.error(err) });
+      .catch(function (err) { return console.error(err, 'esda') });
     } else {
       initMap(line.content);
     }
 
     function initMap(addresses) {
+      var lat = localStorageService.get('place') == 'Чехия' ? '50.0755' : '48.1486';
+      var lng = localStorageService.get('place') == 'Чехия' ? '14.4378' : '17.1077';
+      var center = new google.maps.LatLng(lat, lng);
+      
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
+        center: center,
         draggable: true,
         disableDefaultUI: true,
         animation: google.maps.Animation.DROP,
@@ -24,7 +29,7 @@
       var infoWindow = new google.maps.InfoWindow;
       
       map.setOptions({ styles: [{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#e5c163"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#c4c4c4"}]},{"featureType":"administrative.neighborhood","elementType":"labels.text.fill","stylers":[{"color":"#e5c163"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21},{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#e5c163"},{"lightness":"0"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.text.stroke","stylers":[{"color":"#e5c163"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#575757"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#999999"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}] });
-
+      
       for (var i = 0; i < addresses.length; i++) {
         var dbmarker = addresses[i];
         var myLatlng = new google.maps.LatLng(dbmarker.cords[0], dbmarker.cords[1]);
@@ -49,17 +54,19 @@
         })(marker);
       }
 
-      $cordovaGeolocation.getCurrentPosition().then(function (resp) {
-        var pos = {
-          lat: resp.coords.latitude,
-          lng: resp.coords.longitude
-        };
+      $cordovaGeolocation.getCurrentPosition({ timeout: 10000, enableHighAccuracy: true })
+        .then(function (resp) {
+          var pos = {
+            lat: resp.coords.latitude,
+            lng: resp.coords.longitude
+          };
 
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('<p style="color: black">Your location</p>');
-        infoWindow.open(map);
-        map.setCenter(pos);
-      });
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('<p style="color: black">Your location</p>');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        })
+        .catch(function(err) { map.setCenter({ lat: lat, lng: lng }) });
     }
   }
 })();

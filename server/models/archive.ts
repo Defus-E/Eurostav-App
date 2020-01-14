@@ -9,7 +9,7 @@ export interface IRoomId {
 } 
 
 export interface IArchiveModel extends Model<IArchiveDocument> {
-  add(roomId: any, salt: string, sender: string, text: string, time: string, image: boolean): void
+  add(roomId: any, salt: string, sender: string, text: string, image: boolean): IArchiveMessage
   get(roomId: any): IResponseMessages;
   auth(roomId: string, password: string): void;
   addAuth(data: { room: string, password: string, confirm: string }): string;
@@ -34,15 +34,16 @@ const schema: Schema = new Schema({
     sender: String,
     text: String,
     image: Boolean,
-    time: String
+    time: Date
   }],
   password: String
 });
 
 let count = -10;
 
-schema.static('add', async (roomId: string | IRoomId, salt: string, sender: string, text: string, time: string, image: boolean) => {
+schema.static('add', async (roomId: string | IRoomId, salt: string, sender: string, text: string, image: boolean): Promise<IArchiveMessage> => {
   let sr: string, rs: string, all: string;
+  let response: IArchiveDocument;
 
   if (typeof roomId === 'string') {
     sr = null;
@@ -59,16 +60,16 @@ schema.static('add', async (roomId: string | IRoomId, salt: string, sender: stri
   if (!archive) {
     const newArchive: IArchiveDocument = new Archive({
       room: sr || roomId,
-      messages: [{ salt, sender, image, time, text }]
+      messages: [{ salt, sender, image, text, time: new Date() }]
     });
 
-    newArchive.save();
+    response = await newArchive.save();
   } else {
-    const message: IArchiveMessage = { salt, sender, image, time, text };
-
-    archive.messages.push(message);
-    archive.save();
+    archive.messages.push({ salt, sender, image, text, time: new Date() });
+    response = await archive.save();
   }
+
+  return response.messages[response.messages.length - 1];
 });
 
 schema.static('get', async (roomId: string | IRoomId) => {

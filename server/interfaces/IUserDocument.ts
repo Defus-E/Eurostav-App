@@ -29,4 +29,55 @@ export interface IUserDocument extends Document {
 	clearPathAvatar?: string;
 	businesstrips?: string;
 	anotherinformation?: string;
+	tabled?: boolean;
+	tables?: ITable[]
+}
+
+export interface ITable {
+	date: Date;
+	phone: string;
+	lunch: string;
+	coming: string;
+	leaving: string;
+	address: string;
+	crane: string;
+	login: string;
+	day: number;
+}
+
+export interface IGrouppedTable {
+	addresses: unknown[],
+	tablesForAddress: ITable[],
+	staticData: staticData,
+	date: string
+}
+
+export interface staticData {
+	login: string;
+	username: string;
+	phones: unknown[];
+	cranes: unknown[];
+}
+
+export interface ITableChange {
+  date: string;
+  address: string;
+  login: string;
+  staticData: {
+    day: string;
+    coming: string;
+    leaving: string;
+    lunch: string;
+  }[];
+}
+
+export interface IUserNames {
+  _id: any;
+  username: string;
+  login: string;
+  address?: string;
+  tables?: ITable[];
+  phones?: string[];
+  cranes?: string[];
+  date?: string;
 }

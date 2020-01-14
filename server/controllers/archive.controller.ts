@@ -34,7 +34,7 @@ export default class ArchiveController {
       const room = this.generateRoomId(idSender, idReciever);
       const { messages, total } = await Archive.get(room);
       
-      res.send({ messages, total });
+      res.send({ messages, total, serverTime: new Date() });
     } catch (err) {
       if (err instanceof ArchiveError)
 				return next(new HttpError(404, err.message));

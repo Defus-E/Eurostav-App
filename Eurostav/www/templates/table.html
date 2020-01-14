@@ -2,7 +2,7 @@
   <div id="app">
     <main class="screen_tables_in">
       <div class="bar">
-        <h1>{{tb.date.day}} <span>{{tb.date.month}}</span></h1>
+        <h1>{{ tb.date.day < 10 ? '0' + tb.date.day : tb.date.day }} <span>{{ formatDate(tb.date.month) }}</span></h1>
       </div>
       <form>
         <div class="uk-margin">

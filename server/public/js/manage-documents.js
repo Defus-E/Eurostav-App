@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  let formDataGlob;
+
   $('.add-news-button').on('click', () => {
     const form = $('form#edit-news');
 
@@ -97,6 +99,23 @@ $(document).ready(function () {
     }
   });
 
+  $('.ul-workers .title').on('click', function(e) {
+    const $parent = $(this).parent();
+    const $id = $parent.attr('data-id');
+
+    $.get('/workers/profile?id=' + $id + '&npage=true', data => {
+      const props = [
+        'middlename', 'dob', 'location', 'residence', 'crimrecord', 'nationality', 
+        'phoneUA', 'phoneCZ', 'education', 'addressCZ', 'experience', 'documents', 'skills', 'currentposition', 
+        'notation', 'businesstrips', 'anotherinformation'
+      ];
+      
+      for (let i = 0; i < props.length; i++) $('#profile input[name="' + props[i] + '"]').val(data[props[i]]);
+      $('#profile input[name="firstname"]').val(data.username.split(' ')[0]);
+      $('#profile input[name="lastname"]').val(data.username.split(' ')[1]);
+    });
+  });
+
   $('.2archive').on('click', function (e) {
     e.preventDefault();
 
@@ -110,44 +129,37 @@ $(document).ready(function () {
     });
   });
 
-  $('.save').on('click', function (e) {
+  $('#save').on('click', function (e) {
+    e.preventDefault();
     if ($('input[name="firstname"]').val().trim() == '' || $('input[name="lastname"]').val().trim() == '')
       return alert('Имя и Фамилия не должны быть пусты!');
 
     const id = $(this).attr('data-id');
-    const data = $('.info-worker :input').serialize();
+    const data = $('.info-worker :input').serializeArray();
+    
+    if (!formDataGlob) formDataGlob = new FormData();
+    data.forEach(elem => formDataGlob.append(elem.name, elem.value));
+    formDataGlob.append('id', id);
     
     $.ajax({
       type: 'POST',
       url: '/workers/profile/save',
-      data: `id=${id}&${data}`,
-      statusCode: {
-        200: () => alert('Сохранено')
-      }
+      data: formDataGlob,
+      cache: false,
+      contentType: false,
+      processData: false,
+      async: true,
+      success: () => alert('Изменения успешно сохранены.')
     });
+
+    formDataGlob = null;
   });
 
   $('input[type="file"]').on('change', function() {
     if (this.files && this.files[0]) {
-      const formData = new FormData();
-      const login = $(this).attr('data-login');
-
-      formData.append("login", login);
-      formData.append("avatar", this.files[0]);
-
-      $.ajax({
-        url: '/workers/profile/avatar',
-        cache: false,
-        contentType: false,
-        processData: false,
-        async: false,
-        data: formData,
-        type: 'POST',
-        statusCode: {
-          200: () => $('.photo img').attr('src', URL.createObjectURL(this.files[0])),
-          412: () => alert('Изображение имеет неверный формат')
-        }
-      });
+      formDataGlob = new FormData();
+      formDataGlob.append("avatar", this.files[0]);
+      $('.photo img').attr('src', URL.createObjectURL(this.files[0]))
     }
   });
 });

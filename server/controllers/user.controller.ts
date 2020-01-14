@@ -18,7 +18,6 @@ export default class UserController {
 		this._router.post(`${path}place`, checkAuth, this.changePlace);
 		this._router.post(`${path}search`, checkAuth, this.searchWorker);
 		this._router.post(`${path}profile/save`, checkAuth, this.saveUserProfile);
-		this._router.post(`${path}profile/avatar`, checkAuth, this.setUserAvatar);
 		this._router.post(`${path}add`, checkAuth, this.addUser.bind(this));
 		this._router.post(`${path}edit`, checkAuth, this.editUser.bind(this));
 		this._router.post(`${path}delete`, checkAuth, this.deleteUser.bind(this));
@@ -156,11 +155,8 @@ export default class UserController {
 
 	private static async getUserProfile(req: Request, res: Response, next: NextFunction) {
 		try {
-			if (!req.query.id)
-				return next(new HttpError(404, 'Страница не найдена!'));
-
-			const params: { id: string } = req.query;
-			const response = await User.info(params.id);
+			const { id, npage } = req.query;
+			const response = await User.info(id);
 			const props: string[] = [
 				'middlename', 'dob', 'location', 'residence', 'crimrecord', 'nationality', 
 				'phoneUA', 'phoneCZ', 'education', 'addressCZ', 'experience', 'skills', 'documents', 'currentposition', 
@@ -174,53 +170,34 @@ export default class UserController {
 				if (!response[props[i]] || response[props[i]] == null || response[props[i]] == undefined) 
 					response[props[i]] = '';
 
-			res.render('profile', response);
+			npage === 'true' ? res.send(response) : res.render('profile', response);
     } catch (err) {
       next(new HttpError(404, 'Страница не найдена!'));
     }
 	}
 
 	private static async saveUserProfile(req: Request, res: Response, next: NextFunction) {
-		try {
-			const data: IUser = req.body;
-			const response = await User.profile(data);
-			
-			res.send({});
-    } catch (err) {
-      if (err instanceof AuthError)
-				return next(new HttpError(406, err.message));
-			
-			next(err);
-    }
-	}
+		const form: formidable = new formidable.IncomingForm();
+		const salt: string = Math.floor(Math.random() * 1e8) + '';
+		const validImageTypes: string[] = ['image/tiff', 'image/jpeg', 'image/png', 'image/webp', 'image/pjpeg'];
+		let filename: string;
 
-	private static async setUserAvatar(req: Request, res: Response, next: NextFunction) {
-		try {
-			let form: formidable = new formidable.IncomingForm();
-			let salt: string = Math.floor(Math.random() * 1e8) + '';
-			let validImageTypes: string[] = ['image/tiff', 'image/jpeg', 'image/png', 'image/webp', 'image/pjpeg'];
+		form.parse(req, (err, fields, files) => {
+			try {
+				if (filename === '') return res.send(412);
+				let image: string = filename ? `/img/avatars/${filename}` : null;
 
-			form.multiples = true;
-			form.parse(req, (err, fields, files) => {
-				if (!validImageTypes.includes(files.avatar.type)) return res.send(412);
-
-				let login: string = fields.login;
-				let clearPath: string = path.join(__dirname, `../public/img/avatars/${salt}${files.avatar.name[0]}.${files.avatar.name.match(/[^.]*$/g)[0]}`);
-				let _path: string = `http://77.240.101.171:3000/img/avatars/${salt}${files.avatar.name[0]}.${files.avatar.name.match(/[^.]*$/g)[0]}`;
-
-				User.avatar(login, _path, clearPath);
+				User.profile(fields, image);
 				res.send({});
-			});
+			} catch (err) {
+				(err instanceof AuthError) ? next(new HttpError(406, err.message)) : next(err);
+			}
+		});
 
-			form.on('fileBegin', (name: string, file) => {
-				if (!validImageTypes.includes(file.type)) return;
-				file.path = path.join(__dirname, `../public/img/avatars/${salt}${file.name[0]}.${file.name.match(/[^.]*$/g)[0]}`);
-			});
-    } catch (err) {
-			if (err instanceof AuthError)
-				return next(new HttpError(406, err.message));
-			
-			next(err);
-    }
+		form.on('fileBegin', (name: string, file) => {
+			if (!validImageTypes.includes(file.type)) return filename = '';
+			filename = salt + file.name[0] + '.' + file.name.match(/[^.]*$/g)[0];
+			file.path = path.join(__dirname, `../public/img/avatars/${filename}`);
+		});
 	}
 }

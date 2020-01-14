@@ -1,8 +1,8 @@
 (function () {
   angular.module('starter')
-    .controller('RoomController', ['$scope', '$stateParams', '$cordovaCamera', '$cordovaFile', '$cordovaFileTransfer', '$cordovaDevice', '$ionicPopup', '$cordovaActionSheet', '$state', '$http', 'localStorageService', 'socket', 'moment', RoomController]);
+    .controller('RoomController', ['$scope', '$stateParams', '$cordovaCamera', '$cordovaFile', '$cordovaFileTransfer', '$cordovaDevice', '$ionicPopup', '$cordovaActionSheet', '$http', 'localStorageService', 'socket', RoomController]);
 
-  function RoomController($scope, $stateParams, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet, $state, $http, localStorageService, socket, moment) {
+  function RoomController($scope, $stateParams, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet, $http, localStorageService, socket) {
     var self = this;
     var canUpload = true;
     var currentUser = localStorageService.get('username');
@@ -57,7 +57,7 @@
     };
  
     $scope.showAlert = function(title, msg) {
-      var alertPopup = $ionicPopup.alert({
+      $ionicPopup.alert({
         title: title,
         template: msg
       });
@@ -87,7 +87,7 @@
     function uploadFile(image, pub) {
       var url = "http://77.240.101.171:3000/loadImage/chat";
       var targetPath = pathForImage(image);
-      var filename = image;;
+      var filename = image;
     
       var options = {
         fileKey: "file",
@@ -104,7 +104,7 @@
           'sender': currentUser,
           'text': res.pathImg,
           'image': true,
-          'time': moment().format('LT')
+          'time': momentF()
         };
 
         self.messages.push(msg);
@@ -134,16 +134,14 @@
         'sender': currentUser,
         'text': self.text,
         'image': false,
-        'time': moment().format('LT')
+        'time': momentF()
       };
 
       self.messages.push(msg);
       self.text = '';
 
-      $('.sendinp').prop('disabled', true);
-
       socket.emit('send:message', pub, msg);
-
+      $('.sendinp').prop('disabled', true);
       $(".app-content").animate({
         scrollTop: $('.app-content').prop("scrollHeight")
       }, 1000, function () {
@@ -151,13 +149,30 @@
       });
     };
 
-    socket.on('get:message', function (sender, msg) {
+    socket.on('get:message', function (sender, msg, time, serverTime) {
       self.roomId = localStorageService.get('roomId');
 
       if (sender == self.roomId) {
         var appDiv = $('.app-content');
         var isBottom = appDiv.outerHeight() + appDiv.scrollTop() + 10 >= appDiv.prop('scrollHeight');
+        var difference = getDifferenceBetweenTime(serverTime, Date.now());
+        var date = new Date(time);
+        var hours = date.getHours() + difference.hours;
+        var minutes = date.getMinutes() + difference.minutes;
+        
+        if (minutes >= 60) {
+          minutes = 0;
+          hours++;
+        }
+        if (hours >= 24) {
+          hours = 0;
+          minutes = 0;
+        }
 
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        msg.time = hours + ':' + minutes;
         self.messages.push(msg);
 
         if (isBottom) {
@@ -180,6 +195,17 @@
       }
     });
 
+    function momentF() {
+      var date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+
+      return hours + ':' + minutes;
+    }
+
     function selectPicture(sourceType, pub) {
       var options = {
         quality: 100,
@@ -188,54 +214,53 @@
         saveToPhotoAlbum: false
       };
     
-      $cordovaCamera.getPicture(options).then(function(imagePath) {
-        var currentName = imagePath.replace(/^.*[\\\/]/, '');
-        var date = new Date();
-        var name = date.getTime();
-        var newFileName =  name + ".jpg";
-    
-        if ($cordovaDevice.getPlatform() == 'Android' && sourceType === Camera.PictureSourceType.PHOTOLIBRARY) {
-          window.FilePath.resolveNativePath(imagePath, function(entry) {
-            window.resolveLocalFileSystemURL(entry, success, fail);
-            function fail(e) {
-              console.error('Error: ', e);
+      $cordovaCamera.getPicture(options)
+        .then(function(imagePath) {
+          var currentName = imagePath.replace(/^.*[\\\/]/, '');
+          var date = new Date();
+          var name = date.getTime();
+          var newFileName =  name + ".jpg";
+      
+          if ($cordovaDevice.getPlatform() == 'Android' && sourceType === Camera.PictureSourceType.PHOTOLIBRARY) {
+            window.FilePath.resolveNativePath(imagePath, function(entry) {
+              window.resolveLocalFileSystemURL(entry, success, fail);
+              function fail(e) {
+                console.error('Error: ', e);
+              }
+      
+              function success(fileEntry) {
+                var namePath = fileEntry.nativeURL.substr(0, fileEntry.nativeURL.lastIndexOf('/') + 1);
+                $cordovaFile.copyFile(namePath, fileEntry.name, cordova.file.dataDirectory, newFileName).then(function(success){
+                  uploadFile(data.name, data.image, pub);
+                }, function(error){
+                  $scope.showAlert('Error', error.exception);
+                });
+              };
             }
-    
-            function success(fileEntry) {
-              var namePath = fileEntry.nativeURL.substr(0, fileEntry.nativeURL.lastIndexOf('/') + 1);
-              $cordovaFile.copyFile(namePath, fileEntry.name, cordova.file.dataDirectory, newFileName).then(function(success){
-                uploadFile(newFileName, pub);
-              }, function(error){
-                $scope.showAlert('Error', error.exception);
-              });
-            };
+          );
+          } else {
+            var namePath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
+            $cordovaFile.moveFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(function(success){
+              uploadFile(data.name, data.image, pub);
+            }, function(error){
+              $scope.showAlert('Error', error.exception);
+            });
           }
-        );
-        } else {
-          var namePath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-          $cordovaFile.moveFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(function(success){
-            uploadFile(newFileName, pub);
-          }, function(error){
-            $scope.showAlert('Error', error.exception);
-          });
-        }
-      },
-      function(err){
-        // Not always an error, maybe cancel was pressed...
-      });
+        })
+        .catch(function (err) {
+          alert('Необходимо получить разрешение на использование камеры.')
+          return;
+        });
     };
 
     function pathForImage(image) {
-      if (image === null) {
-        return '';
-      } else {
-        return cordova.file.dataDirectory + image;
-      }
+      return image ? cordova.file.dataDirectory + image : '';
     };
 
     function getMessages(res) {
       var total = res.data.total;
       var messages = res.data.messages;
+      var serverTime = res.data.serverTime;
       var appDiv = $('.app-content');
 
       if (messages) {
@@ -245,7 +270,29 @@
           $('.loadmore').show();
         }
 
-        self.messages = messages;
+        var localTime = Date.now();
+        var difference = getDifferenceBetweenTime(serverTime, localTime);
+
+        self.messages = messages.map(function(message) {
+          var date = new Date(message.time);
+          var hours = date.getHours() + difference.hours;
+          var minutes = date.getMinutes() + difference.minutes;
+          
+          if (minutes >= 60) {
+            minutes = 0;
+            hours++;
+          }
+          if (hours >= 24) {
+            hours = 0;
+            minutes = 0;
+          }
+
+          hours = hours < 10 ? '0' + hours : hours;
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+
+          message.time = hours + ':' + minutes;
+          return message;
+        });
         appDiv.animate({
           scrollTop: appDiv.prop('scrollHeight')
         }, 100);
@@ -261,5 +308,15 @@
       sr: `${sender}&&${reciever}`,
       rs: `${reciever}&&${sender}`
     };
+  }
+
+  function getDifferenceBetweenTime(serverTime, localTime) {
+    var s = new Date(serverTime);
+    var l = new Date(localTime);
+
+    return {
+      hours: l.getHours() - s.getHours(),
+      minutes: l.getMinutes() - s.getMinutes()
+    }
   }
 })();

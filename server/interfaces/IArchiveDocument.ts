@@ -5,7 +5,7 @@ export interface IArchiveMessage {
   sender: string;
   text: string;
   image: boolean;
-  time?: string;
+  time?: Date | string;
 }
 
 export interface IArchiveDocument extends Document {
